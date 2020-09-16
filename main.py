@@ -101,14 +101,17 @@ def move(rect, block_list, player, portal_list, lava_list):
     hit_chest = check_chest(rect, portal_list)
     for chest in hit_chest:
         if not chest_open:
-            if player.use:
-                level += 1
-                if level == 1:
-                    game_map = map_1
-                if level == 2:
-                    game_map = map_2
-                if level == 3:
-                    win = True
+            level += 1
+            if level == 1:
+                game_map = map_1
+            if level == 2:
+                game_map = map_2
+            if level == 3:
+                game_map = map_3
+            if level == 4:
+                win = True
+            if level > 4:
+                level = 4
     hit_lava = check_collision(rect, lava_list)
     if len(hit_lava) != 0:
         die = True
@@ -117,6 +120,7 @@ def move(rect, block_list, player, portal_list, lava_list):
 
 map_1 = load_map('data/map/map')
 map_2 = load_map('data/map/map_1')
+map_3 = load_map('data/map/map_2')
 game_map = map_1
 
 while True:
@@ -166,6 +170,9 @@ while True:
             player.rect.y = 16
         if game_map == map_2:
             player.rect.x = 25 * 16
+            player.rect.y = 16
+        if game_map == map_3:
+            player.rect.x = 40 * 16
             player.rect.y = 16
         die = False
     player.rect = pygame.Rect(player.rect.x, player.rect.y, player.rect.width, player.rect.height)
