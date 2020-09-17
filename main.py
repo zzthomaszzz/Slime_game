@@ -22,6 +22,11 @@ win_text = pygame.font.SysFont('arial', 16)
 text = win_text.render('YOU WIN!', True, (255, 0, 0))
 textRect = text.get_rect()
 textRect.center = (300 // 2, 50)
+death = 0
+death_count = pygame.font.SysFont('arial', 10)
+death_text = death_count.render(f"DEATH COUNT: {death}", True, (255, 255, 0))
+death_rect = death_text.get_rect()
+death_rect.center = (50, 30)
 level = 1
 jump_pen = True
 die = False
@@ -29,7 +34,6 @@ win = False
 portal_tick = 20
 portal_img = 0
 tick = 0
-
 
 
 def load_map(path):
@@ -80,7 +84,7 @@ def check_chest(rect, portal_list):
 
 
 def move(rect, block_list, player, portal_list, lava_list):
-    global chest_open, level, game_map, die, win
+    global chest_open, level, game_map, die, win, death
     collision_type = {'left': False, 'right': False, 'bottom': False, 'top': False}
     player.rect.x += player.movement[0]
     hit_list = check_collision(rect, block_list)
@@ -115,6 +119,7 @@ def move(rect, block_list, player, portal_list, lava_list):
     hit_lava = check_collision(rect, lava_list)
     if len(hit_lava) != 0:
         die = True
+        death += 1
     return collision_type
 
 
@@ -223,6 +228,8 @@ while True:
         player.movement[1] = 0.2
     if win:
         display.blit(text, textRect)
+    death_text = death_count.render(f"DEATH COUNT: {death}", True, (255, 255, 0))
+    display.blit(death_text, death_rect)
     screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
     pygame.display.update()
     clock.tick(60)
