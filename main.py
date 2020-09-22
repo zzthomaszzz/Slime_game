@@ -113,9 +113,11 @@ def move(rect, block_list, player, portal_list, lava_list):
             if level == 3:
                 game_map = map_3
             if level == 4:
+                game_map = map_4
+            if level == 5:
                 win = True
-            if level > 4:
-                level = 4
+            if level > 5:
+                level = 5
     hit_lava = check_collision(rect, lava_list)
     if len(hit_lava) != 0:
         die = True
@@ -126,6 +128,7 @@ def move(rect, block_list, player, portal_list, lava_list):
 map_1 = load_map('data/map/map')
 map_2 = load_map('data/map/map_1')
 map_3 = load_map('data/map/map_2')
+map_4 = load_map('data/map/map_3')
 game_map = map_1
 
 while True:
@@ -179,6 +182,9 @@ while True:
         if game_map == map_3:
             player.rect.x = 40 * 16
             player.rect.y = 16
+        if game_map == map_4:
+            player.rect.x = 16 * 3
+            player.rect.y = 16 * 16
         die = False
     player.rect = pygame.Rect(player.rect.x, player.rect.y, player.rect.width, player.rect.height)
     display.blit(player.img, (player.rect.x - scroll[0], player.rect.y - scroll[1]))
