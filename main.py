@@ -83,17 +83,26 @@ def check_chest(rect, portal_list):
     return portal
 
 
-def move(rect, block_list, player, portal_list, lava_list):
+def move(rect, block_list, player, portal_list, lava_list, water_list):
     global chest_open, level, game_map, die, win, death
     collision_type = {'left': False, 'right': False, 'bottom': False, 'top': False}
     player.rect.x += player.movement[0]
     hit_list = check_collision(rect, block_list)
+    water_check = check_collision(rect, water_list)
     for block in hit_list:
         if player.movement[0] > 0:
             rect.right = block.left
         if player.movement[0] < 0:
             rect.left = block.right
     player.rect.y += int(player.movement[1])
+    for block in water_check:
+        if player.movement[0] > 0:
+            player.movement[0] = player.movement[0] * 0.5
+        if player.movement[0] < 0:
+            player.movement[0] = player.movement[0] * 0.5
+        else:
+            pass
+
     hit_list = check_collision(rect, block_list)
     for block in hit_list:
         if player.movement[1] > 0:
@@ -133,8 +142,8 @@ game_map = map_1
 
 while True:
     display.fill((0, 255, 255))
-    true_scroll[0] += (player.rect.x - true_scroll[0] - 155)/2
-    true_scroll[1] += (player.rect.y - true_scroll[1] - 90)/2
+    true_scroll[0] += (player.rect.x - true_scroll[0] - 155)//10
+    true_scroll[1] += (player.rect.y - true_scroll[1] - 90)//10
     scroll = true_scroll.copy()
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
@@ -170,6 +179,8 @@ while True:
                 portal_list.append(pygame.Rect(x * 16, y * 16, 32, 16))
             if tile == '6':
                 lava_list.append(pygame.Rect(x * 16, y * 16, 16, 16))
+            if tile == '3' or tile == '4':
+                water_list.append(pygame.Rect(x * 16, y * 16, 16, 16))
             x += 1
         y += 1
     if die:
@@ -188,7 +199,7 @@ while True:
         die = False
     player.rect = pygame.Rect(player.rect.x, player.rect.y, player.rect.width, player.rect.height)
     display.blit(player.img, (player.rect.x - scroll[0], player.rect.y - scroll[1]))
-    collision = move(player.rect, tiles, player, portal_list, lava_list)
+    collision = move(player.rect, tiles, player, portal_list, lava_list, water_list)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE] and not jump_pen:
